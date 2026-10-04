@@ -64,6 +64,15 @@ services:
     networks:
       - backend
 
+  migrate:
+    image: migrate/migrate:v4.20.1
+    profiles:
+      - tools
+    volumes:
+      - ./services:/migrations:ro
+    networks:
+      - backend
+
 
 volumes:
   postgres_data:
