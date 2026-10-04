@@ -42,3 +42,25 @@ frontend/       Web frontend
 proto/          gRPC contracts
 infrastructure/ Infrastructure configuration
 docs/           Project documentation
+```
+
+## Local infrastructure
+
+Infinitune uses Docker Compose for local infrastructure.
+
+Start:
+
+```bash
+make up
+```
+
+Check containers:
+
+```bash
+make ps
+```
+
+Stop:
+```bash
+make down
+```

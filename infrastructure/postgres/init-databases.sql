@@ -1,0 +1,11 @@
+CREATE DATABASE auth_db;
+CREATE DATABASE user_db;
+CREATE DATABASE catalog_db;
+CREATE DATABASE playlist_db;
+CREATE DATABASE media_db;
+CREATE DATABASE interaction_db;
+CREATE DATABASE comment_db;
+CREATE DATABASE history_db;
+CREATE DATABASE recommendation_db;
+CREATE DATABASE rule_db;
+CREATE DATABASE content_db;
