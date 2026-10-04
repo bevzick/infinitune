@@ -1,4 +1,16 @@
-.PHONY: help up down restart build logs ps infra-clean fmt test
+.PHONY: help up down restart build logs ps infra-clean fmt test \
+	migrate-auth-up migrate-auth-down migrate-auth-version
+
+
+ifeq (,$(wildcard ./.env))
+	$(error .env file not found. Copy .env.example to .env)
+endif
+
+include .env
+export
+
+AUTH_DATABASE_URL := postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/auth_db?sslmode=disable
+
 
 help:
 	@echo "Available commands:"
@@ -40,7 +52,7 @@ logs-redis:
 	@docker compose logs -f redis
 
 logs-kong:
-	@dcoker compose logs -f kong
+	@docker compose logs -f kong
 
 
 ps:
@@ -54,7 +66,7 @@ infra-clean:
 fmt:
 	@for service in services/*; do \
 		if [ -f "$$service/go.mod" ]; then \
-			echo "Fromatting $$service"; \
+			echo "Formatting $$service"; \
 			(cd $$service && go fmt ./...); \
 		fi \
 	done
@@ -67,3 +79,22 @@ test:
 			(cd $$service && go test ./...); \
 		fi \
 	done
+
+
+migrate-auth-up:
+	@docker compose run --rm migrate \
+		-path=/migrations/auth-service/migrations \
+		-database="$(AUTH_DATABASE_URL)" \
+		up
+
+migrate-auth-down:
+	@docker compose run --rm migrate \
+		-path=/migrations/auth-service/migrations \
+		-database="$(AUTH_DATABASE_URL)" \
+		down 1
+
+migrate-auth-version:
+	@docker compose run --rm migrate \
+		-path=/migrations/auth-service/migrations \
+		-database="$(AUTH_DATABASE_URL)" \
+		version
